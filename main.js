@@ -1,7 +1,9 @@
-elementContainer = document.querySelector(".container");
+getElement();
 
-let idInput = document.querySelector("##id-Input");
-let nameInput = document.querySelector("name-Input");
+elementContainer = document.querySelector("#cards");
+
+let idInput = document.querySelector("#id-Input");
+let nameInput = document.querySelector("#name-Input");
 let directorInput = document.querySelector("#genre-Input");
 let genreInput = document.querySelector("#director-Input");
 let ratingInput = document.querySelector("#rating-Input");
@@ -15,7 +17,7 @@ function addElement() {
     rating: Number(ratingInput.value),
   };
 
-  fetch("address", {
+  fetch("https://localhost:7294/v1/Films_And_Series_", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(newElement),
@@ -29,15 +31,33 @@ function addElement() {
 }
 
 function getElement() {
-  fetch("adress")
+  fetch("https://localhost:7294/v1/Films_And_Series_")
     .then((res) => res.json())
-    .then((data) => displayElement(data.element));
+    .then((data) => displayElement(data));
 }
 
 function displayElement(element) {
   element.forEach((e) => {
-    elementContainer.innerHtml += `
-   <>${e.name}</>;
+    elementContainer.innerHTML += `
+   <div class="col-4 text-center p-2"> 
+        <div class="card bg-dark text-light rounded border-warning">
+            <div class="card-body text-center">  
+                <div class="h1">     
+                ${e.name}         
+                </div>
+                <p class="card-information">
+                Director: ${e.director} 
+                </p>
+                <p>
+                Genre: ${e.genre}
+                </p>
+                <p>
+                Rating: ${e.rating}
+                </p>
+                <img src= >
+            </div>    
+        <div/>
+    </div>                    
     `;
   });
 }
