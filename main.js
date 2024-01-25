@@ -9,8 +9,25 @@ let directorInput = document.querySelector("#director-Input");
 let ratingInput = document.querySelector("#rating-Input");
 
 let addElementBtn = document.querySelector("#add-element-btn");
+// let updateElementBtn = document.querySelector("#update-element-btn");
+let removeElementBtn = document.querySelector("#remove-element-btn");
 
 addElementBtn.addEventListener("click", addElement);
+// updateElementBtn.addEventListener("click", updateElement);
+removeElementBtn.addEventListener("click", removeElement);
+
+// function updateElement() {}
+
+function removeElement(id) {
+  id = Number(idInput.value);
+
+  fetch(`http://localhost:5140/v1/Films_And_Series_/${id}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  })
+    .then((res) => res.json())
+    .then((res) => console.log(res));
+}
 
 function addElement() {
   let newElement = {
