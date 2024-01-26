@@ -7,26 +7,62 @@ let nameInput = document.querySelector("#name-Input");
 let genreInput = document.querySelector("#genre-Input");
 let directorInput = document.querySelector("#director-Input");
 let ratingInput = document.querySelector("#rating-Input");
+let updateIdInput = document.querySelector("#update-id-Input");
 
 let addElementBtn = document.querySelector("#add-element-btn");
-// let updateElementBtn = document.querySelector("#update-element-btn");
+let updateElementBtn = document.querySelector("#update-element-btn");
 let removeElementBtn = document.querySelector("#remove-element-btn");
 
 addElementBtn.addEventListener("click", addElement);
-// updateElementBtn.addEventListener("click", updateElement);
+updateElementBtn.addEventListener("click", updateElement);
 removeElementBtn.addEventListener("click", removeElement);
 
-// function updateElement() {}
+function updateElement(id, updatedElement) {
+  id = Number(updateIdInput.value);
 
-function removeElement(id) {
-  id = Number(idInput.value);
+  updatedElement = {
+    id: id,
+    name: nameInput.value,
+    director: directorInput.value,
+    genre: genreInput.value,
+    rating: Number(ratingInput.value),
+  };
 
-  fetch(`http://localhost:5140/v1/Films_And_Series_/${id}`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
+  fetch(`http://localhost:5140/v1/Films_And_Series_?id=${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updatedElement),
   })
-    .then((res) => res.json())
-    .then((res) => console.log(res));
+    .then((res) => {
+      if (res.ok) {
+        return res.json(); // Parse response body as JSON
+      } else {
+        throw new Error("Failed to update element.");
+      }
+    })
+    .then((data) => {
+      console.log(`Element with ID ${id} updated successfully.`, data);
+      getElement(); // Refresh the displayed elements
+    })
+    .catch((error) => {
+      console.error("Error occurred while updating element:", error);
+    });
+}
+
+function removeElement() {
+  let id = Number(idInput.value);
+
+  fetch(`http://localhost:5140/v1/Films_And_Series_?id=${id}`, {
+    method: "DELETE",
+  }).then((res) => {
+    if (res.ok) {
+      console.log(`Element with ID ${id} removed successfully.`);
+    } else {
+      console.error("Failed to remove element.");
+    }
+  });
 }
 
 function addElement() {
@@ -58,6 +94,7 @@ function getElement() {
 }
 
 function displayElement(element) {
+  elementContainer.innerHTML = "";
   element.forEach((e) => {
     elementContainer.innerHTML += `
    <div class="col-4 text-center p-2"> 
